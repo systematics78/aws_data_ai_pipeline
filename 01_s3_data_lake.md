@@ -21,8 +21,8 @@ Recommended structure:
 aws s3api create-bucket --bucket bayer-datalake-<env> --region eu-central-1
 
 Folder layout (prefixes):
-`s3://bayer-datalake/.
-├── raw/               #Ingested, untouched data.
+`s3://bayer-datalake/`
+`├── raw/               #Ingested, untouched data.`
 ├── curated/           #Cleaned, structured datasets.
 ├── processed/         #ML-ready or analytics outputs.
 ├── models/            #Saved ML models.
