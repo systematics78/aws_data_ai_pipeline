@@ -73,7 +73,7 @@ Run:
 pipeline.upsert(role_arn="arn:aws:iam::123456789012:role/SageMakerPipelineExecutionRole")
 pipeline.start(parameters={"ModelApprovalStatus": "PendingManualApproval"})
 
-#Step 3: Track and Approve Model in Registry
+Step 3: Track and Approve Model in Registry
 Go to SageMaker Console > Model Registry
 
 Select your ModelPackage
@@ -91,9 +91,6 @@ sagemaker.deploy(
 Step 5: Optional – CI/CD with CodePipeline + CodeBuild
 buildspec.yml:
 
-yaml
-Copy
-Edit
 version: 0.2
 phases:
   install:
