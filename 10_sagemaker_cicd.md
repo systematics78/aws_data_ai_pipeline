@@ -32,6 +32,7 @@ Install:
 pip install sagemaker==2.100 boto3
 
 Sample: pipeline.py
+/*
 from sagemaker.workflow.pipeline import Pipeline
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep, ModelStep
 from sagemaker.workflow.parameters import ParameterString, ParameterFloat
@@ -65,10 +66,13 @@ pipeline = Pipeline(
     parameters=[model_approval],
     steps=[train_step, register_step]
 )
+*/
+
 Run:
 
 pipeline.upsert(role_arn="arn:aws:iam::123456789012:role/SageMakerPipelineExecutionRole")
 pipeline.start(parameters={"ModelApprovalStatus": "PendingManualApproval"})
+
 Step 3: Track and Approve Model in Registry
 Go to SageMaker Console > Model Registry
 
