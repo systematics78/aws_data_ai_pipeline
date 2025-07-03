@@ -1,7 +1,7 @@
 ## S3 — Data Lake Storage
-###Amazon S3 Configuration for Data Lake
+### Amazon S3 Configuration for Data Lake
 
-##1. 🎯 Purpose in Drug Development
+## 1. 🎯 Purpose in Drug Development
 Amazon S3 acts as the central data lake for storing:
 Clinical trial datasets (CSV, Parquet, JSON)
 Genomics or omics files (VCF, BAM, FASTQ)
@@ -9,7 +9,7 @@ Real-world evidence (RWE) from external partners
 Model artifacts and logs
 S3 provides durability, scalability, versioning, and integration with AWS analytics and ML services.
 
-2. 🔗 Key Dependencies
+## 2. 🔗 Key Dependencies
 IAM Roles with fine-grained access
 
 KMS key (customer-managed if GxP required)
