@@ -1,14 +1,14 @@
 ## SageMaker CI/CD
 CI/CD for Amazon SageMaker (Model Training to Deployment)
 
-#1. 🎯 Purpose in Drug Development
+1. 🎯 Purpose in Drug Development
 In GxP-regulated environments, SageMaker CI/CD ensures:
   Automated, traceable ML model lifecycle (train → register → approve → deploy)
   Version control for all artifacts (code, data, models)
   Compliance with 21 CFR Part 11 via approvals and audit logs
   Reproducibility for scientific and regulatory audits
 
-#2. 🔗 Key Dependencies
+2. 🔗 Key Dependencies
 S3: Source code, data, models
 SageMaker Pipelines: Orchestration engine
 SageMaker Model Registry: Tracks model versions
@@ -16,7 +16,7 @@ CodePipeline / CodeBuild (optional)
 IAM Role: SageMakerPipelineExecutionRole
 Optional: EventBridge, SNS, CloudWatch
 
-#3. ⚙️ Configuration Steps
+3. ⚙️ Configuration Steps
 Step 1: Prepare the Project Structure (in CodeCommit or GitHub)
 sagemaker-pipeline/
 ├── preprocessing.py
@@ -32,7 +32,7 @@ Install:
 pip install sagemaker==2.100 boto3
 
 Sample: pipeline.py
-
+s
 from sagemaker.workflow.pipeline import Pipeline
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep, ModelStep
 from sagemaker.workflow.parameters import ParameterString, ParameterFloat
