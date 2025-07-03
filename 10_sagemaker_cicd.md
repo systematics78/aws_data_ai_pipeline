@@ -1,14 +1,14 @@
 ## SageMaker CI/CD
 CI/CD for Amazon SageMaker (Model Training to Deployment)
 
-1. 🎯 Purpose in Drug Development
+#1. 🎯 Purpose in Drug Development
 In GxP-regulated environments, SageMaker CI/CD ensures:
   Automated, traceable ML model lifecycle (train → register → approve → deploy)
   Version control for all artifacts (code, data, models)
   Compliance with 21 CFR Part 11 via approvals and audit logs
   Reproducibility for scientific and regulatory audits
 
-2. 🔗 Key Dependencies
+#2. 🔗 Key Dependencies
 S3: Source code, data, models
 SageMaker Pipelines: Orchestration engine
 SageMaker Model Registry: Tracks model versions
@@ -16,7 +16,7 @@ CodePipeline / CodeBuild (optional)
 IAM Role: SageMakerPipelineExecutionRole
 Optional: EventBridge, SNS, CloudWatch
 
-3. ⚙️ Configuration Steps
+#3. ⚙️ Configuration Steps
 Step 1: Prepare the Project Structure (in CodeCommit or GitHub)
 sagemaker-pipeline/
 ├── preprocessing.py
@@ -32,24 +32,24 @@ Install:
 pip install sagemaker==2.100 boto3
 
 Sample: pipeline.py
-/*
+
 from sagemaker.workflow.pipeline import Pipeline
 from sagemaker.workflow.steps import ProcessingStep, TrainingStep, ModelStep
 from sagemaker.workflow.parameters import ParameterString, ParameterFloat
 from sagemaker.workflow.model_step import RegisterModel
 from sagemaker.workflow.pipeline_context import PipelineSession
 
-# Step 1: Parameters
+-- Step 1: Parameters
 model_approval = ParameterString(name="ModelApprovalStatus", default_value="PendingManualApproval")
 
-# Step 2: Training
+-- Step 2: Training
 train_step = TrainingStep(
     name="TrainModel",
     estimator=xgb_estimator,
     inputs={...}
 )
 
-# Step 3: Register
+-- Step 3: Register
 model_metrics = ...
 register_step = RegisterModel(
     name="RegisterModel",
@@ -66,14 +66,14 @@ pipeline = Pipeline(
     parameters=[model_approval],
     steps=[train_step, register_step]
 )
-*/
+
 
 Run:
 
 pipeline.upsert(role_arn="arn:aws:iam::123456789012:role/SageMakerPipelineExecutionRole")
 pipeline.start(parameters={"ModelApprovalStatus": "PendingManualApproval"})
 
-Step 3: Track and Approve Model in Registry
+#Step 3: Track and Approve Model in Registry
 Go to SageMaker Console > Model Registry
 
 Select your ModelPackage
