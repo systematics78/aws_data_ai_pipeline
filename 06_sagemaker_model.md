@@ -1,11 +1,12 @@
+
 ## SageMaker — ML Training & Inference
 ### Amazon SageMaker Configuration
 
 ## 1. 🎯 Purpose in Drug Development
 - Amazon SageMaker provides a fully managed platform for:
-- Training machine learning models using trial or omics data
-- Deploying inference endpoints for clinical risk scoring, dropout prediction, adverse event detection
-- Tracking experiments, model versions, and feature sets in a regulated, auditable way
+  - Training machine learning models using trial or omics data
+  - Deploying inference endpoints for clinical risk scoring, dropout prediction, adverse event detection
+  - Tracking experiments, model versions, and feature sets in a regulated, auditable way
 
 It is ideal for pharma ML pipelines where traceability, versioning, and reproducibility are required under GxP or R&D workflows.
 
@@ -23,23 +24,24 @@ Attach policies:
 - AmazonS3ReadOnlyAccess
 - (Optional) AWSGlueConsoleFullAccess if using Athena for training input
 
-<pre>aws iam create-role \
-  --role-name SageMakerExecutionRole \
-  --assume-role-policy-document file://sagemaker-trust-policy.json</pre>
+```
+aws iam create-role   --role-name SageMakerExecutionRole   --assume-role-policy-document file://sagemaker-trust-policy.json
+```
+
 ### Step 2: Upload Data to S3
-`aws s3 cp clinical_features.csv s3://bayer-datalake/processed/ml/`
+```
+aws s3 cp clinical_features.csv s3://bayer-datalake/processed/ml/
+```
+
 ### Step 3: Launch Notebook or Training Job
-### Option A: Studio or Notebook Instance
-Create via SageMaker Console → “Notebook” → choose kernel (Python)
 
-`Set role = SageMakerExecutionRole`
+#### Option A: Studio or Notebook Instance
+Create via SageMaker Console → “Notebook” → choose kernel (Python)  
+Set role = SageMakerExecutionRole
 
-### Option B: Launch Training Job (Script in S3)
-
-<pre>aws sagemaker create-training-job \
-  --training-job-name dropout-model-train \
-  --algorithm-specification TrainingImage=382416733822.dkr.ecr.eu-central-1.amazonaws.com/xgboost:1.3-1,TrainingInputMode=File \
-  --input-data-config '[
+#### Option B: Launch Training Job (Script in S3)
+```
+aws sagemaker create-training-job   --training-job-name dropout-model-train   --algorithm-specification TrainingImage=382416733822.dkr.ecr.eu-central-1.amazonaws.com/xgboost:1.3-1,TrainingInputMode=File   --input-data-config '[
     {
       "ChannelName": "train",
       "DataSource": {
@@ -51,21 +53,14 @@ Create via SageMaker Console → “Notebook” → choose kernel (Python)
       },
       "ContentType": "csv"
     }
-  ]' \
-  --output-data-config S3OutputPath=s3://bayer-datalake/models/dropout_xgb \
-  --resource-config InstanceType=ml.m5.xlarge,InstanceCount=1,VolumeSizeInGB=30 \
-  --stopping-condition MaxRuntimeInSeconds=600 \
-  --role-arn arn:aws:iam::<account>:role/SageMakerExecutionRole</pre>
-### Step 4: Deploy Model as Endpoint
-<pre>
-aws sagemaker create-model \
-  --model-name dropout-model \
-  --primary-container Image="...",ModelDataUrl=s3://bayer-datalake/models/dropout_xgb/output/model.tar.gz \
-  --execution-role-arn arn:aws:iam::<account>:role/SageMakerExecutionRole
+  ]'   --output-data-config S3OutputPath=s3://bayer-datalake/models/dropout_xgb   --resource-config InstanceType=ml.m5.xlarge,InstanceCount=1,VolumeSizeInGB=30   --stopping-condition MaxRuntimeInSeconds=600   --role-arn arn:aws:iam::<account>:role/SageMakerExecutionRole
+```
 
-aws sagemaker create-endpoint-config \
-  --endpoint-config-name dropout-config \
-  --production-variants '[
+### Step 4: Deploy Model as Endpoint
+```
+aws sagemaker create-model   --model-name dropout-model   --primary-container Image="...",ModelDataUrl=s3://bayer-datalake/models/dropout_xgb/output/model.tar.gz   --execution-role-arn arn:aws:iam::<account>:role/SageMakerExecutionRole
+
+aws sagemaker create-endpoint-config   --endpoint-config-name dropout-config   --production-variants '[
     {
       "VariantName": "AllTraffic",
       "ModelName": "dropout-model",
@@ -74,34 +69,33 @@ aws sagemaker create-endpoint-config \
     }
   ]'
 
-aws sagemaker create-endpoint \
-  --endpoint-name dropout-inference \
-  --endpoint-config-name dropout-config</pre>
+aws sagemaker create-endpoint   --endpoint-name dropout-inference   --endpoint-config-name dropout-config
+```
+
 ## 4. 🔐 Governance & Security
-  - Enable VPC mode for both training and inference
-  - Enable KMS encryption for:
+- Enable VPC mode for both training and inference
+- Enable KMS encryption for:
   - Data at rest (S3)
   - EBS volumes
   - Model output
-  - Limit IAM permissions (no open *)
-  - Use CloudWatch Logs, CloudTrail, and S3 Object Lock for traceability
-  - Use SageMaker Experiments to track model lineage
+- Limit IAM permissions (no open *)
+- Use CloudWatch Logs, CloudTrail, and S3 Object Lock for traceability
+- Use SageMaker Experiments to track model lineage
 
 ## 5. ✅ Validation & Outputs
+
 Inference call:
-<pre>
-aws sagemaker-runtime invoke-endpoint \
-  --endpoint-name dropout-inference \
-  --body '{"features": [72, 1, 0.85]}' \
-  --content-type application/json \
-  output.json</pre>
+```
+aws sagemaker-runtime invoke-endpoint   --endpoint-name dropout-inference   --body '{"features": [72, 1, 0.85]}'   --content-type application/json   output.json
+```
 Output:
 `{ "risk_score": 0.87 }`
+
 Check logs in CloudWatch: `/aws/sagemaker/Endpoints/dropout-inference`
 
 ## 6. 🌱 Optional Enhancements
-  - Use SageMaker Pipelines for full CI/CD
-  - Register models in Model Registry
-  - Monitor drift with Model Monitor
-  - Use Feature Store if features are reused across models
-  - Trigger retraining via Step Functions
+- Use SageMaker Pipelines for full CI/CD
+- Register models in Model Registry
+- Monitor drift with Model Monitor
+- Use Feature Store if features are reused across models
+- Trigger retraining via Step Functions
