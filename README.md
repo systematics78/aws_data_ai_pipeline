@@ -16,3 +16,6 @@ This repository provides a **modular and secure architecture** for building GxP-
 9. [Monitoring & Audit — CloudTrail, CloudWatch, SNS](./09_monitoring_audit.md)  
 10. [SageMaker CI/CD — Pipeline, Registry, Approval](./10_sagemaker_cicd.md)  
 11. [Terraform Setup — SageMaker CI/CD as Code](./11_sagemaker_cicd_terraform.md)
+12. 12_push_data_to_s3.md
+13. 13_extended_services_best_practices.md
+
