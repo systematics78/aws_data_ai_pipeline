@@ -25,10 +25,9 @@ Step 1: Enable Lake Formation
 Go to Lake Formation Console → click “Get started” → opt in.
 
 Step 2: Register S3 Locations as Data Lake Locations
-
-aws lakeformation register-resource \
+<pre>aws lakeformation register-resource \
   --resource-arn arn:aws:s3:::bayer-datalake \
-  --use-service-linked-role
+  --use-service-linked-role</pre>
 (You must be LF Admin to register resources.)
 
 
@@ -39,7 +38,7 @@ You define access at the:
 - Column level (e.g., mask PII)
 - Row level (via data filters)
 
-aws lakeformation grant-permissions \
+<pre>aws lakeformation grant-permissions \
   --principal DataLakePrincipalIdentifier=arn:aws:iam::123456789012:role/ClinicalAnalyst \
   --permissions "SELECT" \
   --resource '{
@@ -47,19 +46,18 @@ aws lakeformation grant-permissions \
           "DatabaseName": "clinical_trials",
           "Name": "patients"
       }
-  }'
+  }</pre>
 
 Step 4: Enable Column- or Row-Level Security (Optional)
 Define Data Filter (Row-Level Filtering)
-
-aws lakeformation create-data-cell-filter \
+<pre>aws lakeformation create-data-cell-filter \
   --table-name patients \
   --database-name clinical_trials \
   --name "germany-only" \
-  --row-filter '{"AllRowsWildcard": {}, "ColumnNames": ["trial_site"], "FilterExpression": "trial_site = '\''Germany'\''"}'
+  --row-filter '{"AllRowsWildcard": {}, "ColumnNames": ["trial_site"], "FilterExpression": "trial_site = '\''Germany'\''"}</pre>
 
 Assign filter to role:
-aws lakeformation grant-permissions \
+<pre>aws lakeformation grant-permissions \
   --principal DataLakePrincipalIdentifier=arn:aws:iam::123456789012:role/RegulatoryTeam \
   --permissions "SELECT" \
   --resource '{
@@ -69,7 +67,7 @@ aws lakeformation grant-permissions \
       "TableName": "patients",
       "Name": "germany-only"
     }
-  }'
+  }</pre>
 
 4. 🔐 Governance & Security
 - Lake Formation becomes the policy enforcement point for Athena, Redshift Spectrum, and EMR.
