@@ -19,12 +19,12 @@ This is essential for structured querying, ETL, and governed access to trial dat
 ## 3. ⚙️ Configuration Steps
 ### Step 1: Create Glue Database
 This is like a schema — a namespace for your tables.
-aws glue create-database \
-  --database-input '{"Name": "clinical_trials", "Description": "GxP data schema"}'
+<pre>aws glue create-database \
+  --database-input '{"Name": "clinical_trials", "Description": "GxP data schema"}</pre>
 
 ### Step 2: Define a Table (Manually or Crawlers)
 ### Option A: Manual Table Creation via API or Console
-aws glue create-table \
+<pre>aws glue create-table \
   --database-name clinical_trials \
   --table-input '{
     "Name": "patients",
@@ -43,14 +43,14 @@ aws glue create-table \
       }
     },
     "TableType": "EXTERNAL_TABLE"
-  }'
+  }</pre>
 
 ### Option B: Use Glue Crawler to Auto-Detect
-aws glue create-crawler \
+<pre>aws glue create-crawler \
   --name "crawl_clinical_patients" \
   --role "GlueCrawlRole" \
   --database-name "clinical_trials" \
-  --targets '{"S3Targets": [{"Path": "s3://bayer-datalake/raw/clinical/"}]}'
+  --targets '{"S3Targets": [{"Path": "s3://bayer-datalake/raw/clinical/"}]}</pre>
 
 Then:
 aws glue start-crawler --name crawl_clinical_patients
