@@ -27,12 +27,12 @@ Optional: Apply lifecycle rule to expire results after 7 days.
 
 Step 2: Set the Results Location
 In the Athena Console, go to "Settings" → set:
-Query result location: s3://bayer-athena-results/
+`Query result location: s3://bayer-athena-results/`
 
 Or via CLI:
-aws athena update-work-group \
+<pre>aws athena update-work-group \
   --work-group primary \
-  --configuration-updates '{"ResultConfigurationUpdates":{"OutputLocation":"s3://bayer-athena-results/"}}'
+  --configuration-updates '{"ResultConfigurationUpdates":{"OutputLocation":"s3://bayer-athena-results/"}}</pre>
 
 Step 3: Test a Query
 Run a query on a Glue/LF-governed table:
@@ -42,16 +42,16 @@ WHERE trial_site = 'Germany'
 LIMIT 20;
 
 Use:
-aws athena start-query-execution \
+<pre>aws athena start-query-execution \
   --query-string "SELECT * FROM clinical_trials.patients LIMIT 10" \
   --query-execution-context Database=clinical_trials \
-  --result-configuration OutputLocation=s3://bayer-athena-results/
+  --result-configuration OutputLocation=s3://bayer-athena-results/</pre>
 
 4. 🔐 Governance & Security
 - Access to data is governed by Lake Formation — Athena will only return data based on LF permissions (e.g., row/column filters).
 - Athena queries appear in CloudTrail.
 - Encrypt results in S3 via KMS if needed:
-aws s3api put-bucket-encryption \
+<pre>aws s3api put-bucket-encryption \
   --bucket bayer-athena-results \
   --server-side-encryption-configuration '{
     "Rules": [{
@@ -60,14 +60,14 @@ aws s3api put-bucket-encryption \
         "KMSMasterKeyID": "<kms-key-id>"
       }
     }]
-  }'
+  }</pre>
 
 5. ✅ Validation & Outputs
 Check query status:
-aws athena get-query-execution --query-execution-id <id>
+`aws athena get-query-execution --query-execution-id <id>`
 
 Check result files in:
-s3://bayer-athena-results/<query-execution-id>.csv
+`s3://bayer-athena-results/<query-execution-id>.csv`
 
 Validate Lake Formation enforcement by logging in as different IAM roles and testing output restrictions.
 
