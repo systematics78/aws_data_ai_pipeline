@@ -36,7 +36,7 @@ Folder layout (prefixes):
 
 ### Step 3: Enable Encryption with KMS
 Use a customer-managed KMS key:
-`aws s3api put-bucket-encryption \
+<pre>aws s3api put-bucket-encryption \
   --bucket bayer-datalake-dev \
   --server-side-encryption-configuration '{
     "Rules": [{
@@ -45,7 +45,7 @@ Use a customer-managed KMS key:
         "KMSMasterKeyID": "<your-kms-key-id>"
       }
     }]
-  }`
+  }<pre>
 
 ### Step 4: Block Public Access (MANDATORY)
 
