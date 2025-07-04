@@ -21,8 +21,8 @@ Recommended structure:
 aws s3api create-bucket --bucket bayer-datalake-<env> --region eu-central-1
 
 Folder layout (prefixes):
-`s3://bayer-datalake/`
-`├── raw/               #Ingested, untouched data.`
+s3://bayer-datalake/
+├── raw/               #Ingested, untouched data.
 ├── curated/           #Cleaned, structured datasets.
 ├── processed/         #ML-ready or analytics outputs.
 ├── models/            #Saved ML models.
@@ -36,7 +36,7 @@ Folder layout (prefixes):
 
 ### Step 3: Enable Encryption with KMS
 Use a customer-managed KMS key:
-'aws s3api put-bucket-encryption \
+`aws s3api put-bucket-encryption \
   --bucket bayer-datalake-dev \
   --server-side-encryption-configuration '{
     "Rules": [{
@@ -45,13 +45,13 @@ Use a customer-managed KMS key:
         "KMSMasterKeyID": "<your-kms-key-id>"
       }
     }]
-  }'
+  }`
 
 ### Step 4: Block Public Access (MANDATORY)
 
-'aws s3api put-public-access-block \
+`aws s3api put-public-access-block \
   --bucket bayer-datalake-dev \
-  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true'
+  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true`
 
 ## 4. 🔐 Governance & Security
 - Use S3 bucket policies + IAM conditions (aws:SourceVpc, aws:PrincipalArn)
@@ -63,13 +63,13 @@ For analytics access: prefer S3 Access Points or Lake Formation integration
 
 ## 5. ✅ Validation & Outputs
 Upload sample file:
-'aws s3 cp trial_data.csv s3://bayer-datalake/raw/clinical/'
+`aws s3 cp trial_data.csv s3://bayer-datalake/raw/clinical/`
 
 Confirm versioning:
-'aws s3api list-object-versions --bucket bayer-datalake-dev'
+`aws s3api list-object-versions --bucket bayer-datalake-dev`
 
 Test IAM access with assumed role:
-'aws sts assume-role --role-arn arn:aws:iam::<acct>:role/S3Reader --role-session-name test'
+`aws sts assume-role --role-arn arn:aws:iam::<acct>:role/S3Reader --role-session-name test`
 
 ## 6. 🌱 Optional Enhancements
 - Enable Intelligent-Tiering for cost savings
