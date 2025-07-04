@@ -30,9 +30,9 @@ Folder layout (prefixes):
 
 
 ### Step 2: Enable Versioning
-`aws s3api put-bucket-versioning \
+<pre>aws s3api put-bucket-versioning \
   --bucket bayer-datalake-dev \
-  --versioning-configuration Status=Enabled`
+  --versioning-configuration Status=Enabled</pre>
 
 ### Step 3: Enable Encryption with KMS
 Use a customer-managed KMS key:
@@ -49,9 +49,9 @@ Use a customer-managed KMS key:
 
 ### Step 4: Block Public Access (MANDATORY)
 
-`aws s3api put-public-access-block \
+<pre>aws s3api put-public-access-block \
   --bucket bayer-datalake-dev \
-  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true`
+  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true</pre>
 
 ## 4. 🔐 Governance & Security
 - Use S3 bucket policies + IAM conditions (aws:SourceVpc, aws:PrincipalArn)
