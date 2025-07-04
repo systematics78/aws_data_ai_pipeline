@@ -20,17 +20,17 @@ In drug development pipelines, EMR is ideal for:
  
 3. ⚙️ Configuration Steps
 Step 1: Create EMR Service Role (if not exists)
-aws iam create-role \
+<pre>aws iam create-role \
   --role-name EMR_DefaultRole \
-  --assume-role-policy-document file://emr-trust-policy.json
+  --assume-role-policy-document file://emr-trust-policy.json</pre>
 
 Attach managed policies:
-aws iam attach-role-policy \
+<pre>aws iam attach-role-policy \
   --role-name EMR_DefaultRole \
-  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole</pre>
 
 Step 2: Create EMR Cluster (with Spark, Glue, Lake Formation support)
-aws emr create-cluster \
+<pre>aws emr create-cluster \
   --name "Bayer-Clinical-ETL" \
   --release-label emr-6.15.0 \
   --applications Name=Spark Name=Hadoop Name=Hive Name=Livy \
@@ -42,27 +42,27 @@ aws emr create-cluster \
   --log-uri s3://bayer-datalake/logs/emr/ \
   --configurations file://emr-config.json \
   --bootstrap-actions file://emr-bootstrap.sh \
-  --region eu-central-1
+  --region eu-central-1</pre>
 
 emr-config.json can include Hive catalog integration with Glue:
-[
+<pre>[
   {
     "Classification": "hive-site",
     "Properties": {
       "hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory"
     }
   }
-]
+]</pre>
 
 Step 3: Submit a Spark Job (ETL)
-aws emr add-steps \
+<pre>aws emr add-steps \
   --cluster-id j-XXXXXXX \
-  --steps Type=Spark,Name="ETLJob",ActionOnFailure=CONTINUE,Args=[--deploy-mode,cluster,--class,org.example.ETLJob,s3://path-to-your-job.jar]
+  --steps Type=Spark,Name="ETLJob",ActionOnFailure=CONTINUE,Args=[--deploy-mode,cluster,--class,org.example.ETLJob,s3://path-to-your-job.jar]</pre>
 
 Or use spark-submit via SSH:
-spark-submit s3://bayer-etl/jobs/transform_clinical_data.py \
+<pre>spark-submit s3://bayer-etl/jobs/transform_clinical_data.py \
   --input s3://bayer-datalake/raw/clinical/ \
-  --output s3://bayer-datalake/curated/clinical/
+  --output s3://bayer-datalake/curated/clinical/</pre>
 
 4. 🔐 Governance & Security
   Workers should run in private subnet with VPC endpoint to S3
@@ -75,7 +75,7 @@ spark-submit s3://bayer-etl/jobs/transform_clinical_data.py \
   Check cluster health via EMR Console
   Output data should appear in S3 under /curated/clinical/
   Job logs should be stored under:
-s3://bayer-datalake/logs/emr/...
+`s3://bayer-datalake/logs/emr/...`
   Verify table metadata in Glue reflects transformed data (optional Glue crawler)
 
 6. 🌱 Optional Enhancements
