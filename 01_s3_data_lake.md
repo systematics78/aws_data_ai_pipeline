@@ -45,7 +45,7 @@ Use a customer-managed KMS key:
         "KMSMasterKeyID": "<your-kms-key-id>"
       }
     }]
-  }<pre>
+  }</pre>
 
 ### Step 4: Block Public Access (MANDATORY)
 
